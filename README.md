@@ -3,7 +3,7 @@ Backend implementation of [colors gambling game](https://www.hacksawgaming.com/g
 ### Tech stack: Go, Fiber, Redis
 
 ## API Docs
-1. `POST /colors/bet`
+1. `POST /colors/bet` -> Place a bet on colors game
    - Body
      ```json
      {
@@ -14,6 +14,6 @@ Backend implementation of [colors gambling game](https://www.hacksawgaming.com/g
      }
      ```
 
-2. `GET /balance`
+2. `GET /balance` -> Check balance of a user
     - Query Parameters
       - `username`: Username of the player to fetch balance for
