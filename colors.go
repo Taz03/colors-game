@@ -9,7 +9,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-const TOTAL_COLORS = 6.0
+const (
+    TOTAL_COLORS = 6.0
+    RTP = 0.98
+)
 
 type Body struct {
     // Username of the player
@@ -45,9 +48,9 @@ type Response struct {
 
 func calculateMultiplier(selectedColors, cubes int) float32 {
     multiplier := float32(math.Pow(TOTAL_COLORS / float64(selectedColors), float64(cubes)))
-    twoPercentLow := multiplier - multiplier * 0.02
+    rtpLow := multiplier - multiplier * (1 - RTP)
 
-    return twoPercentLow
+    return rtpLow
 }
 
 func ColorsBet(context *fiber.Ctx) error {
