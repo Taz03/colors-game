@@ -48,9 +48,9 @@ type Response struct {
 
 func calculateMultiplier(selectedColors, cubes int) float32 {
     multiplier := float32(math.Pow(TOTAL_COLORS / float64(selectedColors), float64(cubes)))
-    rtpLow := multiplier - multiplier * (1 - RTP)
+    multiplier -= multiplier * (1 - RTP)
 
-    return rtpLow
+    return multiplier
 }
 
 func ColorsBet(context *fiber.Ctx) error {
