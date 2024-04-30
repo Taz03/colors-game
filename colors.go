@@ -2,35 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"math"
 	"math/rand"
 	"slices"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-var multiplier = map[int]map[int]float32 {
-    1: {
-        1: 5.88,
-        2: 2.94,
-        3: 1.96,
-        4: 1.47,
-        5: 1.17,
-    },
-    2: {
-        1: 35.28,
-        2: 8.82,
-        3: 3.92,
-        4: 2.20,
-        5: 1.41,
-    },
-    3: {
-        1: 211.68,
-        2: 26.46,
-        3: 7.84,
-        4: 3.30,
-        5: 1.69,
-    },
-}
+const TOTAL_COLORS = 6.0
 
 type Body struct {
     // Username of the player
@@ -53,12 +32,19 @@ type Response struct {
     // Amount lost/won
     Amount float32 `json:"amount"`
 
+    // Amount multiplier in case of win
+    Multiplier float32 `json:"multiplier"`
+
     WinningColors []int `json:"winning_colors"`
 
     SelectedColors []int `json:"selected_colors"`
 
     // Error message in case of erro
     Error string `json:"error"`
+}
+
+func calculateMultiplier(selectedColors, cubes int) float32 {
+    return float32(math.Pow(TOTAL_COLORS / float64(selectedColors), float64(cubes)))
 }
 
 func ColorsBet(context *fiber.Ctx) error {
@@ -92,8 +78,11 @@ func ColorsBet(context *fiber.Ctx) error {
         }
     }
 
+    multiplier := calculateMultiplier(len(body.SelectedColors), body.Cubes)
+
     response.Won = true
-    response.Amount = body.Amount * multiplier[body.Cubes][len(body.SelectedColors)]
+    response.Multiplier = multiplier
+    response.Amount = body.Amount * multiplier
 
     user.IncreaseBalance(response.Amount)
     wonResponse, _ := json.Marshal(response)
