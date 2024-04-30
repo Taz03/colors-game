@@ -48,7 +48,7 @@ type Response struct {
 
 func calculateMultiplier(selectedColors, cubes int) float32 {
     multiplier := float32(math.Pow(TOTAL_COLORS / float64(selectedColors), float64(cubes)))
-    multiplier -= multiplier * (1 - RTP)
+    multiplier *= RTP
 
     return multiplier
 }
