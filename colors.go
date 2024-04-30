@@ -44,7 +44,10 @@ type Response struct {
 }
 
 func calculateMultiplier(selectedColors, cubes int) float32 {
-    return float32(math.Pow(TOTAL_COLORS / float64(selectedColors), float64(cubes)))
+    multiplier := float32(math.Pow(TOTAL_COLORS / float64(selectedColors), float64(cubes)))
+    twoPercentLow := multiplier - multiplier * 0.02
+
+    return twoPercentLow
 }
 
 func ColorsBet(context *fiber.Ctx) error {
@@ -64,8 +67,11 @@ func ColorsBet(context *fiber.Ctx) error {
         randomColors = append(randomColors, rand.Intn(6))
     }
 
+    multiplier := calculateMultiplier(len(body.SelectedColors), body.Cubes)
+
     response := Response {
         WinningColors:  randomColors,
+        Multiplier: multiplier,
         SelectedColors: body.SelectedColors,
     }
     for _, randomColor := range randomColors {
@@ -78,10 +84,7 @@ func ColorsBet(context *fiber.Ctx) error {
         }
     }
 
-    multiplier := calculateMultiplier(len(body.SelectedColors), body.Cubes)
-
     response.Won = true
-    response.Multiplier = multiplier
     response.Amount = body.Amount * multiplier
 
     user.IncreaseBalance(response.Amount)
