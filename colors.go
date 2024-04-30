@@ -47,11 +47,18 @@ type Body struct {
 }
 
 type Response struct {
-    Won            bool
-    Amount         float32
-    WinningColors  []int
-    SelectedColors []int
-    Error          string
+    // Winning status
+    Won bool `json:"won"`
+
+    // Amount lost/won
+    Amount float32 `json:"amount"`
+
+    WinningColors []int `json:"winning_colors"`
+
+    SelectedColors []int `json:"selected_colors"`
+
+    // Error message in case of erro
+    Error string `json:"error"`
 }
 
 func ColorsBet(context *fiber.Ctx) error {
